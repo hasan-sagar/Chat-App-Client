@@ -1,15 +1,32 @@
-import { Box, IconButton, Text } from "@chakra-ui/react";
+import {
+  Box,
+  FormControl,
+  IconButton,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { ChatState } from "../../context/ChatContextProvider";
 import { BiSolidLeftArrowAlt } from "react-icons/bi";
 import { getSender, getSenderFull } from "../chat-logic/ChatLogic";
 import ChatProfile from "./ChatProfile";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
-interface Props {
-  reFetch: any;
-  setRefetch: any;
-}
+import { useState } from "react";
+
 function SingleConversation() {
+  const [message, setMessage] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newMessage, setNewMessage] = useState();
   const { selectedChat, setSelectedChat, user } = ChatState();
+
+  const sendMessage = () => {
+    
+  };
+
+  const typingHandler = (event: any) => {
+    setNewMessage(event.target.value);
+  };
+
   return (
     <>
       {selectedChat ? (
@@ -54,7 +71,31 @@ function SingleConversation() {
             h="100%"
             borderRadius="lg"
             overflowY="hidden"
-          ></Box>
+          >
+            {loading ? (
+              <Spinner
+                thickness="2px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="purple.700"
+                size="md"
+              />
+            ) : (
+              <>{/* Message */}</>
+            )}
+            <FormControl isRequired onKeyDown={sendMessage} mt={3}>
+              <Input
+                onChange={typingHandler}
+                focusBorderColor="purple.700"
+                size="md"
+                fontWeight="medium"
+                variant="filled"
+                bg="white"
+                placeholder="Send Hi ..."
+                value={newMessage}
+              />
+            </FormControl>
+          </Box>
         </>
       ) : (
         <Box className="h-full flex justify-center items-center">

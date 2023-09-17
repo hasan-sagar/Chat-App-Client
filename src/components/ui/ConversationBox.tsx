@@ -1,11 +1,8 @@
 import { Box } from "@chakra-ui/react";
 import { ChatState } from "../../context/ChatContextProvider";
 import SingleConversation from "./SingleConversation";
-interface Props {
-  reFetch: any;
-  setRefetch: any;
-}
-function ConversationBox({ reFetch, setRefetch }: Props) {
+
+function ConversationBox() {
   const { selectedChat } = ChatState();
   return (
     <Box
@@ -16,7 +13,7 @@ function ConversationBox({ reFetch, setRefetch }: Props) {
       bg="white"
       w={{ base: "100%", md: "68%" }}
     >
-      <SingleConversation reFetch={reFetch} setRefetch={setRefetch} />
+      <SingleConversation />
     </Box>
   );
 }

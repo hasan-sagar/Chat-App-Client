@@ -20,7 +20,7 @@ function ChatPage() {
         p="10px"
       >
         {user && <MyChatBar reFetch={reFetch} />}
-        {user && <ConversationBox reFetch={reFetch} setRefetch={setRefetch} />}
+        {user && <ConversationBox />}
       </Box>
     </div>
   );
