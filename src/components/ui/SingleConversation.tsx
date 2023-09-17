@@ -12,15 +12,38 @@ import { getSender, getSenderFull } from "../chat-logic/ChatLogic";
 import ChatProfile from "./ChatProfile";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function SingleConversation() {
-  const [message, setMessage] = useState([]);
+  const [message, setMessage] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [newMessage, setNewMessage] = useState();
+  const [newMessage, setNewMessage] = useState("");
   const { selectedChat, setSelectedChat, user } = ChatState();
 
-  const sendMessage = () => {
-    
+  const sendMessage = async (event: any) => {
+    if (event.key === "Enter" && newMessage) {
+      try {
+        setNewMessage("");
+        const sendMessage: any = await axios.post(
+          `${import.meta.env.VITE_API_URL}/message`,
+          {
+            content: newMessage,
+            chatId: selectedChat._id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        console.log(sendMessage);
+
+        setMessage([...message, sendMessage]);
+      } catch (error) {
+        toast.error("Message send failed");
+      }
+    }
   };
 
   const typingHandler = (event: any) => {
@@ -85,9 +108,10 @@ function SingleConversation() {
             )}
             <FormControl isRequired onKeyDown={sendMessage} mt={3}>
               <Input
+                autoComplete="off"
                 onChange={typingHandler}
                 focusBorderColor="purple.700"
-                size="md"
+                size="lg"
                 fontWeight="medium"
                 variant="filled"
                 bg="white"
