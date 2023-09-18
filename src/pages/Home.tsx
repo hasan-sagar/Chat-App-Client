@@ -13,32 +13,34 @@ function HomePage() {
     if (userInfo) return navigate("/chat");
   }, [navigate]);
   return (
-    <Container maxW="xl" centerContent>
-      <h1 className="text-white mt-10 font-bold text-5xl logo tracking-widest">
-        Chat Message
-      </h1>
-      <Box bg="white" w="100%" p={4} borderRadius="lg" className="mt-10">
-        <Tabs
-          isFitted
-          variant="line"
-          colorScheme="purple"
-          className="fade-in-top"
-        >
-          <TabList mb="1em">
-            <Tab fontWeight="semibold">Login</Tab>
-            <Tab fontWeight="semibold">Sign Up</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel className="fade-in-top">
-              <Login />
-            </TabPanel>
-            <TabPanel className="fade-in-top">
-              <SignUp />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-    </Container>
+    <div className="custom-bg bg-black w-full">
+      <Container maxW="xl" centerContent>
+        <h1 className="text-white mt-10 font-bold text-5xl logo tracking-widest">
+          Chat Message
+        </h1>
+        <Box bg="white" w="100%" p={4} borderRadius="lg" className="mt-10">
+          <Tabs
+            isFitted
+            variant="line"
+            colorScheme="purple"
+            className="fade-in-top"
+          >
+            <TabList mb="1em">
+              <Tab fontWeight="semibold">Login</Tab>
+              <Tab fontWeight="semibold">Sign Up</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel className="fade-in-top">
+                <Login />
+              </TabPanel>
+              <TabPanel className="fade-in-top">
+                <SignUp />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      </Container>
+    </div>
   );
 }
 

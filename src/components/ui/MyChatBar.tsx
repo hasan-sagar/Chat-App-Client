@@ -38,6 +38,7 @@ function MyChatBar({ reFetch }: Props) {
   }, [reFetch]);
   return (
     <Box
+      className="border-2 border-purple-100 shadow-xl rounded-md"
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"

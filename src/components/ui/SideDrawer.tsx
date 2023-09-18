@@ -93,7 +93,7 @@ function SideDrawer() {
 
   return (
     <div className="px-2">
-      <Box className="px-4 py-4 bg-white w-full  mt-2 flex flex-row justify-between items-center">
+      <Box className="shadow-lg border-2 border-purple-100 px-4 py-4 bg-white w-full  mt-2 flex flex-row justify-between items-center">
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="link" onClick={onOpen}>
             <TbUserSearch size="20px" />
