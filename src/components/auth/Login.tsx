@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const passwordFunction = () => setShow(!show);
@@ -35,6 +35,34 @@ function Login() {
         {
           email,
           password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.success("Welcome User");
+      localStorage.setItem("user", JSON.stringify(loginUser.data));
+      navigate("/chat");
+      setLoading(false);
+    } catch (error: any) {
+      const errormessage = error.response.data;
+      toast.error(errormessage);
+      setLoading(false);
+    }
+  };
+
+  //guest login
+  const loginGuest = async (event: any) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const loginUser = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/login`,
+        {
+          email: "guest@gmail.com",
+          password: "guest",
         },
         {
           headers: {
@@ -91,7 +119,12 @@ function Login() {
       >
         Login
       </Button>
-      <Button className="w-full" colorScheme="green" isLoading={loading}>
+      <Button
+        className="w-full"
+        colorScheme="green"
+        isLoading={loading}
+        onClick={loginGuest}
+      >
         Guest User
       </Button>
     </div>
