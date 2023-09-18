@@ -38,7 +38,7 @@ function MyChatBar({ reFetch }: Props) {
   }, [reFetch]);
   return (
     <Box
-      className="border-2 border-purple-100 shadow-xl rounded-md"
+      className="border-2 border-purple-100 shadow-xl rounded-md slide-in-blurred-top"
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
@@ -80,7 +80,7 @@ function MyChatBar({ reFetch }: Props) {
           <Stack overflowY="scroll">
             {chats?.map((chat: any) => (
               <Box
-                className="hover:bg-purple-200 transition duration-300"
+                className="hover:bg-purple-200 transition duration-300 slide-in-blurred-top"
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
                 bg={selectedChat === chat ? "purple.700" : "blackAlpha.100"}
