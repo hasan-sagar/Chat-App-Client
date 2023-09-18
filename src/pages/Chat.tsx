@@ -6,7 +6,7 @@ import ConversationBox from "../components/ui/ConversationBox";
 import { useState } from "react";
 
 function ChatPage() {
-  const [reFetch, setRefetch] = useState(false);
+  const [reFetch] = useState(false);
   const { user } = ChatState();
 
   return (
