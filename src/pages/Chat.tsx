@@ -13,6 +13,7 @@ function ChatPage() {
     <div style={{ width: "100%" }}>
       {user && <SideDrawer />}
       <Box
+        className="scale-up-hor-left"
         display="flex"
         justifyContent="space-between"
         w="100%"

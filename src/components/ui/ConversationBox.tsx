@@ -11,7 +11,7 @@ function ConversationBox({ reFetch, setRefetch }: Props) {
   const { selectedChat } = ChatState();
   return (
     <Box
-      className="border-2 border-purple-100 shadow-xl rounded-md"
+      className="border-2 border-purple-100 shadow-xl rounded-md "
       display={{ base: selectedChat ? "flex" : "none", md: "flex" }}
       alignItems="center"
       flexDir="column"
