@@ -38,7 +38,7 @@ const ChatContextProvider: React.FC<ChatContextProviderProps> = ({
   const navigate = useNavigate();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | any>();
 
   useEffect(() => {
     const userInfoString = localStorage.getItem("user");

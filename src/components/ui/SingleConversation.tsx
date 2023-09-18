@@ -11,9 +11,10 @@ import { BiSolidLeftArrowAlt } from "react-icons/bi";
 import { getSender, getSenderFull } from "../chat-logic/ChatLogic";
 import ChatProfile from "./ChatProfile";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import OnlyConversation from "./OnlyConversation";
 
 function SingleConversation() {
   const [message, setMessage] = useState<any>([]);
@@ -37,14 +38,35 @@ function SingleConversation() {
             },
           }
         );
-        console.log(sendMessage);
-
-        setMessage([...message, sendMessage]);
+        setMessage([...message, sendMessage.data]);
       } catch (error) {
         toast.error("Message send failed");
       }
     }
   };
+
+  const fetchMessage = async () => {
+    if (!selectedChat) return;
+    try {
+      setLoading(true);
+      const fetchChat = await axios.get(
+        `${import.meta.env.VITE_API_URL}/message/${selectedChat._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      setMessage(fetchChat.data);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to fetch chat");
+    }
+  };
+
+  useEffect(() => {
+    fetchMessage();
+  }, [selectedChat]);
 
   const typingHandler = (event: any) => {
     setNewMessage(event.target.value);
@@ -80,7 +102,7 @@ function SingleConversation() {
             ) : (
               <>
                 {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal />
+                <UpdateGroupChatModal fetchMessage={fetchMessage} />
               </>
             )}
           </Text>
@@ -97,14 +119,17 @@ function SingleConversation() {
           >
             {loading ? (
               <Spinner
+                className="flex mx-auto"
                 thickness="2px"
-                speed="0.65s"
+                speed="1s"
                 emptyColor="gray.200"
                 color="purple.700"
-                size="md"
+                size="lg"
               />
             ) : (
-              <>{/* Message */}</>
+              <div className="flex flex-col overflow-y-scroll customscroll">
+                <OnlyConversation message={message} />
+              </div>
             )}
             <FormControl isRequired onKeyDown={sendMessage} mt={3}>
               <Input

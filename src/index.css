@@ -8,6 +8,10 @@ body,
   font-family: "Raleway", sans-serif;
 }
 
+.customscroll {
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
   width: 0px;
 }

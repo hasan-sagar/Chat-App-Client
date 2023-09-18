@@ -24,7 +24,10 @@ import UserBadge from "./UserBadge";
 import { CgMenu } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 
-function UpdateGroupChatModal() {
+interface Props {
+  fetchMessage: () => void;
+}
+function UpdateGroupChatModal({ fetchMessage }: Props) {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState("");
@@ -54,6 +57,7 @@ function UpdateGroupChatModal() {
       );
       setSelectedChat(updateName);
       setRenameLoading(false);
+      fetchMessage();
       navigate(0);
     } catch (error) {
       toast.error("Server Problem");

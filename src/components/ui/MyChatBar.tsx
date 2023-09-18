@@ -33,7 +33,7 @@ function MyChatBar({ reFetch }: Props) {
   useEffect(() => {
     const userString = localStorage.getItem("user") as string;
     const loggedInUser = JSON.parse(userString);
-    setLoggedUser(loggedInUser);
+    setLoggedUser(loggedInUser.user);
     fetchChatData();
   }, [reFetch]);
   return (
