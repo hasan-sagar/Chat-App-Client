@@ -15,12 +15,22 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import OnlyConversation from "./OnlyConversation";
+import { ImSpinner11 } from "react-icons/im";
 
-function SingleConversation() {
+interface Props {
+  reFetch: any;
+  setRefetch: any;
+}
+
+function SingleConversation({ reFetch, setRefetch }: Props) {
+  const [msgrefetch, setmsgrefetc] = useState(false);
   const [message, setMessage] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const { selectedChat, setSelectedChat, user } = ChatState();
+
+  console.log(selectedChat);
+  console.log(user);
 
   const sendMessage = async (event: any) => {
     if (event.key === "Enter" && newMessage) {
@@ -66,7 +76,9 @@ function SingleConversation() {
 
   useEffect(() => {
     fetchMessage();
-  }, [selectedChat]);
+    setmsgrefetc(false);
+    setRefetch(!reFetch);
+  }, [selectedChat, msgrefetch === true]);
 
   const typingHandler = (event: any) => {
     setNewMessage(event.target.value);
@@ -91,9 +103,16 @@ function SingleConversation() {
               icon={<BiSolidLeftArrowAlt />}
               onClick={() => setSelectedChat("")}
             />
+            <button
+              onClick={() => {
+                setmsgrefetc(true);
+              }}
+            >
+              <ImSpinner11 size="15px" />
+            </button>
             {!selectedChat.isGroupChat ? (
               <>
-                {getSender(user, selectedChat.users)}
+                {getSender(user?.user, selectedChat.users)}
                 <ChatProfile
                   user={getSenderFull(user, selectedChat.users)}
                   children={undefined}
@@ -102,7 +121,11 @@ function SingleConversation() {
             ) : (
               <>
                 {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal fetchMessage={fetchMessage} />
+                <UpdateGroupChatModal
+                  fetchMessage={fetchMessage}
+                  reFetch={reFetch}
+                  setRefetch={setRefetch}
+                />
               </>
             )}
           </Text>

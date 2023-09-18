@@ -26,8 +26,10 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   fetchMessage: () => void;
+  reFetch: any;
+  setRefetch: any;
 }
-function UpdateGroupChatModal({ fetchMessage }: Props) {
+function UpdateGroupChatModal({ fetchMessage, reFetch, setRefetch }: Props) {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState("");
@@ -56,6 +58,7 @@ function UpdateGroupChatModal({ fetchMessage }: Props) {
         }
       );
       setSelectedChat(updateName);
+      setRefetch(!reFetch);
       setRenameLoading(false);
       fetchMessage();
       navigate(0);
@@ -109,6 +112,7 @@ function UpdateGroupChatModal({ fetchMessage }: Props) {
         }
       );
       setSelectedChat(addUser.data);
+      setRefetch(!reFetch);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -140,6 +144,7 @@ function UpdateGroupChatModal({ fetchMessage }: Props) {
       user1._id === user?.user._id
         ? setSelectedChat()
         : setSelectedChat(removeUser);
+      setRefetch(!reFetch);
       setLoading(false);
       navigate(0);
     } catch (error) {

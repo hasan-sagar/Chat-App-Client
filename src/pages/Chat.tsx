@@ -6,7 +6,7 @@ import ConversationBox from "../components/ui/ConversationBox";
 import { useState } from "react";
 
 function ChatPage() {
-  const [reFetch] = useState(false);
+  const [reFetch, setRefetch] = useState(false);
   const { user } = ChatState();
 
   return (
@@ -20,7 +20,7 @@ function ChatPage() {
         p="10px"
       >
         {user && <MyChatBar reFetch={reFetch} />}
-        {user && <ConversationBox />}
+        {user && <ConversationBox reFetch={reFetch} setRefetch={setRefetch} />}
       </Box>
     </div>
   );
