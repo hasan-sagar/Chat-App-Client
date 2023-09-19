@@ -16,6 +16,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import OnlyConversation from "./OnlyConversation";
 import { ImSpinner11 } from "react-icons/im";
+import { io } from "socket.io-client";
+import Lottie from "lottie-react";
+import typingAnimation from "../../assets/typing.json";
+
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT as string;
+let socket: any, selectedChatCompare: any;
 
 interface Props {
   reFetch: any;
@@ -29,11 +35,14 @@ function SingleConversation({ reFetch, setRefetch }: Props) {
   const [newMessage, setNewMessage] = useState("");
   const { selectedChat, setSelectedChat, user } = ChatState();
 
-  console.log(selectedChat);
-  console.log(user);
+  const [typing, setTyping] = useState(false);
+  const [checkTyping, setCheckTyping] = useState(false);
+
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const sendMessage = async (event: any) => {
     if (event.key === "Enter" && newMessage) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         setNewMessage("");
         const sendMessage: any = await axios.post(
@@ -48,6 +57,7 @@ function SingleConversation({ reFetch, setRefetch }: Props) {
             },
           }
         );
+        socket.emit("new message", sendMessage.data);
         setMessage([...message, sendMessage.data]);
       } catch (error) {
         toast.error("Message send failed");
@@ -69,19 +79,64 @@ function SingleConversation({ reFetch, setRefetch }: Props) {
       );
       setMessage(fetchChat.data);
       setLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast.error("Failed to fetch chat");
     }
   };
 
   useEffect(() => {
+    socket = io(API_ENDPOINT);
+    socket.emit("setup", user?.user);
+    socket.on("connected", () => {
+      setSocketConnected(true);
+    });
+    socket.on("typing", () => {
+      setCheckTyping(true);
+    });
+    socket.on("stop typing", () => {
+      setCheckTyping(false);
+    });
+  }, []);
+
+  useEffect(() => {
     fetchMessage();
+    selectedChatCompare = selectedChat;
     setmsgrefetc(false);
     setRefetch(!reFetch);
   }, [selectedChat, msgrefetch === true]);
 
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved: any) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+      } else {
+        setMessage([...message, newMessageRecieved]);
+      }
+    });
+  });
+
   const typingHandler = (event: any) => {
     setNewMessage(event.target.value);
+    if (!socketConnected) {
+      return;
+    }
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -155,6 +210,17 @@ function SingleConversation({ reFetch, setRefetch }: Props) {
               </div>
             )}
             <FormControl isRequired onKeyDown={sendMessage} mt={3}>
+              {checkTyping ? (
+                <>
+                  <Lottie
+                    className="h-14 w-14"
+                    animationData={typingAnimation}
+                    loop={true}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
               <Input
                 autoComplete="off"
                 onChange={typingHandler}
